@@ -47,7 +47,7 @@ def main(argv):
 				sys.exit(1)
 
 	# convert hex colour into HSV colour (array)
-	colourHsv = colourConv.hexColourToHsv(colourHex)
+	colourHsv = colourConv.hexColourToJevoisHsv(colourHex)
 
 	# instantiate the jevois object
 	machine = jevois.Jevois()
