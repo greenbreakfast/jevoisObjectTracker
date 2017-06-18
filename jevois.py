@@ -8,7 +8,9 @@ class Jevois(object):
 		self.ser = serial.Serial(serdev, 115200, timeout=1)
 
 	def close(self):
-		self.ser.close()
+		# TODO: ensure that this works
+		if self.ser.is_open:
+			self.ser.close()
 
 	# Send a command to JeVois and show response
 	def sendCommand(self, cmd):
@@ -42,7 +44,15 @@ class Jevois(object):
 	def setObjectTrackerColourParams(self, hsvVals, tolerance):
 		"""Set HSV values for object tracking mode."""
 		tol = [[50,25],[75,75],[90,90]]
-		self.setHue(hsvVals['h'], tol[0][0], tol[0][1])
-		self.setSaturation(hsvVals['s'], tol[1][0], tol[1][1])
-		self.setValue(hsvVals['v'], tol[2][0], tol[2][1])
+		try:
+			# self.setHue(hsvVals['h'], tol[0][0], tol[0][1])
+			# self.setSaturation(hsvVals['s'], tol[1][0], tol[1][1])
+			# self.setValue(hsvVals['v'], tol[2][0], tol[2][1])
+			self.setHue(hsvVals['h'], tolerance, tolerance)
+			self.setSaturation(hsvVals['s'], tolerance, tolerance)
+			self.setValue(hsvVals['v'], tolerance, tolerance)
+		except Exception, e:
+			print >> sys.stderr, "Expected object with H, S, and V integer values
+			print >> sys.stderr, "Exception: %s" % str(e)
+			return 1
 
