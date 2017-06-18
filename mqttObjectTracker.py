@@ -1,11 +1,12 @@
 #!/usr/bin/python
 
 import time
+import json
 import sys, getopt
 
 import paho.mqtt.client as mqtt
 
-import jevois
+import jevois, colourConv
 
 
 def printUsage():
@@ -90,7 +91,12 @@ def mqttRoutine(config):
 			tol = config['tolerance']
 			if "tolerance" in msg:
 				tol = msg['tolerance']
-			#machine.setObjectTrackerColourParams(msg, tol)
+
+			#print("Programming jevois with (H:", msg['h'], ", S:", msg['s'], ", V:", msg['v'], ") and tolerance of ", tol )
+			# convert hsv values to Jevois HSV (0-255)
+			jevoisHsv = colourConv.hsvToJevoisHsv(msg)
+			print("Programming jevois with (H:", jevoisHsv['h'], ", S:", jevoisHsv['s'], ", V:", jevoisHsv['v'], ") and tolerance of ", tol )
+			#machine.setObjectTrackerColourParams(jevoisHsv, tol)
 
 
 
@@ -113,17 +119,17 @@ def mqttRoutine(config):
 def main(argv):
 	# default configuration
 	config = {
-		tolerance: 10,
-		mqtt: {
-			server: "",
-			topic: "",
-			port: 1883	# TODO: confirm this port number
+		'tolerance': 10,
+		'mqtt': {
+			'server': "",
+			'topic': "",
+			'port': 1883	# TODO: confirm this port number
 		}
 	}
 
 	# parse command line arguments
 	parseCommandLineArgs(config, argv)
-	
+
 	# run mqtt code
 	mqttRoutine(config)
 
@@ -131,6 +137,3 @@ def main(argv):
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
-
-	
-

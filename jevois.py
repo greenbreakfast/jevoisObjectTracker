@@ -27,7 +27,7 @@ class Jevois(object):
 	def setParRange(self, par, minVal, maxVal):
 		"""Send a command to set a range paramter."""
 	 	self.sendCommand('setpar {0} {1}...{2}'.format(par, minVal, maxVal) )
-			
+
 	def setHue(self, val, toleranceLow=0, toleranceHigh=0):
 		"""Set colour hue range for object tracking mode."""
 		self.setParRange('hrange', max(0,val-toleranceLow), min(255,val+toleranceHigh) )
@@ -52,7 +52,6 @@ class Jevois(object):
 			self.setSaturation(hsvVals['s'], tolerance, tolerance)
 			self.setValue(hsvVals['v'], tolerance, tolerance)
 		except Exception, e:
-			print >> sys.stderr, "Expected object with H, S, and V integer values
+			print >> sys.stderr, "Expected object with H, S, and V integer values"
 			print >> sys.stderr, "Exception: %s" % str(e)
 			return 1
-
